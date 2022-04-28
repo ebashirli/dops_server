@@ -129,6 +129,3 @@ class ValueModel(BaseModel):
  fileNames: list[str]
  isCommented: bool
  isHidden: bool
-
-
- activities: list[Activity] = []
