@@ -59,7 +59,11 @@ async def download_get():
   zip_name = 'files.zip'
   return FileResponse(zip_name, filename=zip_name, media_type='application/zip')
 
-
+@app.get('/download/{id}/{name}')
+async def download_get_file(id, name):
+  file_path = base_path + '\\' + id + '\\' + name
+  _, file_extension = os.path.splitext(name)
+  return FileResponse(file_path, filename=name, media_type=f'application/{file_extension}')
 
 if __name__ == '__main__':
   run("main:app", host="0.0.0.0", port=5000, reload=True)
