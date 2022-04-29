@@ -1,8 +1,15 @@
-from datetime import datetime
-from pydantic import BaseModel
+from sqlalchemy import Column, ForeignKey, Boolean, Column, ForeignKey, Integer, String, Enum, Text
+from sqlalchemy.orm import relationship
 
-class Activity(BaseModel):
- id: str | None = None
+
+from ..db_setup import Base
+
+from datetime import datetime
+
+class Activity(Base):
+ __tablename__ = 'activities'
+
+ id: Column(Integer, primary_key=True, index=True)
  activityId: str
  activityName: str
  moduleName: str
@@ -14,8 +21,10 @@ class Activity(BaseModel):
  cumulative: float
  isHidden: bool
 
-class Drawing(BaseModel):
- id: str | None = None
+class Drawing(Base):
+ __tablename__ = 'drawings'
+
+ id: Column(Integer, primary_key=True, index=True)
  activityCodeId: str
  drawingNumber: str
  drawingTitle: str
@@ -29,8 +38,10 @@ class Drawing(BaseModel):
  drawingCreateDate: datetime
  isHidden: bool
 
-class Issue(BaseModel):
- id: str | None = None
+class Issue(Base):
+ __tablename__ = 'issues'
+
+ id: Column(Integer, primary_key=True, index=True)
  groupNumber: int 
  creationDate: datetime 
  createdBy: str 
@@ -41,19 +52,25 @@ class Issue(BaseModel):
  issueDate: datetime
  isHidden: bool
 
-class ListName(BaseModel):
- id: str | None = None
+class ListName(Base):
+ __tablename__ = 'listnames'
+ 
+ id: Column(Integer, primary_key=True, index=True)
  name: str
  isHidden: bool
 
-class ListItem(BaseModel):
- id: str | None = None
+class ListItem(Base):
+ __tablename__ = 'listitems'
+
+ id: Column(Integer, primary_key=True, index=True)
  parentId: str
  item: str
  isHidden: bool
 
-class ReferenceDocument(BaseModel):
- id: str | None = None
+class ReferenceDocument(Base):
+ __tablename__ = 'referencedocuments'
+
+ id: Column(Integer, primary_key=True, index=True)
  project: str
  referenceType: str
  moduleName: str
@@ -65,8 +82,10 @@ class ReferenceDocument(BaseModel):
  assignedTasksCount: int
  isHidden: bool
 
-class Staff(BaseModel):
- id: str | None = None
+class Staff(Base):
+ __tablename__ = 'staffs'
+
+ id: Column(Integer, primary_key=True, index=True)
  badgeNo: str
  name: str
  surname: str
@@ -88,8 +107,10 @@ class Staff(BaseModel):
  note: str
  isHidden: bool
 
-class Stage(BaseModel):
- id: str | None = None
+class Stage(Base):
+ __tablename__ = 'stages'
+
+ id: Column(Integer, primary_key=True, index=True)
  taskId: str
  index: int
  checkerCommentCounter: int
@@ -98,8 +119,10 @@ class Stage(BaseModel):
  note: str
  isHidden: bool
 
-class TaskModel(BaseModel):
- id: str | None = None
+class Task(Base):
+ __tablename__ = 'tasks'
+
+ id: Column(Integer, primary_key=True, index=True)
  parentId: str
  revisionMark: str
  referenceDocuments: list[str]
@@ -109,8 +132,10 @@ class TaskModel(BaseModel):
  creationDate: datetime
  isHidden: bool
 
-class ValueModel(BaseModel):
- id: str | None = None
+class Value(Base):
+ __tablename__ = 'values'
+
+ id: Column(Integer, primary_key=True, index=True)
  stageId: str
  employeeId: str
  assignedBy: str
