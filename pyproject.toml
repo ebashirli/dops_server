@@ -10,6 +10,7 @@ uvicorn = "^0.17.6"
 fastapi = "^0.75.2"
 pydantic = "^1.9.0"
 python-multipart = "^0.0.5"
+pywin32 = "^304"
 
 [tool.poetry.dev-dependencies]
 
