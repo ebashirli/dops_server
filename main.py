@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Request, UploadFile
+from fastapi import FastAPI, Request, UploadFile, HTTPException
 from fastapi.responses import FileResponse
 from uvicorn import run
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
-from send_email import send
+from send_email import send, sendNotification
 from starlette.background import BackgroundTask
 
 base_path = r'P:\Ismayil Bashirli\Elvin Bashirli\DOPS'
@@ -57,7 +57,7 @@ async def download_post(request: Request, folder: str | None = None):
         else:
           end_folder_path = os.path.join(base_path, id)
         shutil.make_archive('files', 'zip', end_folder_path)
-        
+
       else:
         continue 
   return 'Done'
@@ -69,26 +69,37 @@ async def download_get():
 
 @app.get('/download/{id}/{name}')
 async def download_get_file(id, name, folder: str | None = None):
-  if folder:
-    file_path = base_path + '\\' + id + '\\' + folder + '\\' + name
-  else:
-    file_path = base_path + '\\' + id + '\\' + name
-  
-  _, file_extension = os.path.splitext(name)
-  return FileResponse(file_path, filename=name, media_type=f'application/{file_extension}')
+  try:
+    if folder:
+      file_path = base_path + '\\' + id + '\\' + folder + '\\' + name
+    else:
+      file_path = base_path + '\\' + id + '\\' + name
+    
+    _, file_extension = os.path.splitext(name)
+    return FileResponse(file_path, filename=name, media_type=f'application/{file_extension}')
+  except:
+    raise HTTPException(status_code=404, detail='File not found')
 
 @app.post('/sendemail')
 async def send_email(request: Request):
-  jsn = await request.json()
+  body = await request.json()
   
-  drawing_no = jsn['drawingNo']
-  filing_id = jsn['filingId']
-  nesting_ids = list(jsn['nestingIds'])
-  email = jsn['email']
-  note = jsn['note']
+  drawing_no = body['drawingNo']
+  filing_id = body['filingId']
+  nesting_ids = list(body['nestingIds'])
+  email = body['email']
+  note = body['note']
 
   send(drawing_no, filing_id, nesting_ids, email, note)
   return 'Sent'
+
+
+@app.post('/send-notification-email')
+async def send_notification_email(request: Request):
+  jsn = await request.json()
+  sendNotification(jsn)
+  return 'Sent'
+
 
 @app.get('/getFiles')
 def get_result_files(drawing_no, filing_id, nesting_ids):
